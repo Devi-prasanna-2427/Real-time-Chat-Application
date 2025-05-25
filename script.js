@@ -1,0 +1,30 @@
+const socket = new WebSocket('ws://localhost:3000');
+
+const chatBox = document.getElementById('chat-box');
+const input = document.getElementById('messageInput');
+
+// Display your message in chat and send to server
+function sendMessage() {
+  const message = input.value.trim();
+  if (message) {
+    // Display locally
+    appendMessage(`You: ${message}`);
+    
+    // Send to server
+    socket.send(message);
+    input.value = '';
+  }
+}
+
+// Display any incoming message
+socket.onmessage = (event) => {
+  appendMessage(`Stranger: ${event.data}`);
+};
+
+// Helper function to add message to chat box
+function appendMessage(msg) {
+  const msgDiv = document.createElement('div');
+  msgDiv.textContent = msg;
+  chatBox.appendChild(msgDiv);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
